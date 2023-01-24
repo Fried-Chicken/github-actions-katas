@@ -19,7 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
     steps:
-      - uses: ./.github/actions/download-shared-volume
+      - name: Download shared volume
+        uses: actions/download-artifact@v3
+        with:
+          name: shared-volume
+          path: .
       - name: Building App
         run: chmod +x ci/build-app.sh && ci/build-app.sh
       - uses: ./.github/actions/upload-shared-volume
@@ -29,7 +33,11 @@ jobs:
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
     steps:
-      - uses: ./.github/actions/download-shared-volume
+      - name: Download shared volume
+        uses: actions/download-artifact@v3
+        with:
+          name: shared-volume
+          path: .
       - name: Test App
         run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
   docker-image:
@@ -39,7 +47,11 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: ./.github/actions/download-shared-volume
+      - name: Download shared volume
+        uses: actions/download-artifact@v3
+        with:
+          name: shared-volume
+          path: .
       - name: build docker
         run: chmod +x ci/build-docker.sh && ci/build-docker.sh
       - name: push docker
@@ -49,7 +61,11 @@ jobs:
     name: Component Test
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/download-shared-volume
+      - name: Download shared volume
+        uses: actions/download-artifact@v3
+        with:
+          name: shared-volume
+          path: .
       - name: Execute component test
         run: chmod +x ci/component-test.sh && ci/component-test.sh
   performance-test:
@@ -57,6 +73,10 @@ jobs:
     name: Performance Test
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/download-shared-volume
+      - name: Download shared volume
+        uses: actions/download-artifact@v3
+        with:
+          name: shared-volume
+          path: .
       - name: Execute performance test
         run: chmod +x ci/performance-test.sh && ci/performance-test.sh
