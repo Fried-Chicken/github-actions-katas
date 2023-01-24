@@ -1,0 +1,11 @@
+name: 'Upload Shared Volume'
+description: 'Uploads the shared volume'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Uploading Shared Volume
+      uses: actions/upload-artifact@v3
+      with:
+        name: shared-volume
+        path: .

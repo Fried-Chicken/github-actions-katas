@@ -1,0 +1,11 @@
+name: 'Download Shared Volume'
+description: 'Downloads the shared volume'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Download shared volume
+      uses: actions/download-artifact@v3
+      with:
+        name: shared-volume
+        path: .

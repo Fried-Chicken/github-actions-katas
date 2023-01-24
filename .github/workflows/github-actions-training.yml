@@ -12,40 +12,24 @@ jobs:
     steps:
       - name: Clone the Repo
         uses: actions/checkout@v3
-      - name: Uploading Repo
-        uses: actions/upload-artifact@v3
-        with:
-          name: repo
-          path: .
+      - uses: ./.github/actions/upload-shared-volume
   building-the-application:
     needs: clone-the-repo
     name: Building the Application
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
     steps:
-      - name: Download Repo
-        uses: actions/download-artifact@v3
-        with:
-          name: repo
-          path: .
+      - uses: ./.github/actions/download-shared-volume
       - name: Building App
         run: chmod +x ci/build-app.sh && ci/build-app.sh
-      - name: Uploading app
-        uses: actions/upload-artifact@v3
-        with:
-          name: app
-          path: .
+      - uses: ./.github/actions/upload-shared-volume
   testing-the-application:
     needs: clone-the-repo
     name: Testing the Application
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
     steps:
-      - name: Download Repo
-        uses: actions/download-artifact@v3
-        with:
-          name: repo
-          path: .
+      - uses: ./.github/actions/download-shared-volume
       - name: Test App
         run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
   docker-image:
@@ -55,11 +39,7 @@ jobs:
     permissions:
       packages: write
     steps:
-      - name: Download code
-        uses: actions/download-artifact@v3
-        with:
-          name: app
-          path: .
+      - uses: ./.github/actions/download-shared-volume
       - name: build docker
         run: chmod +x ci/build-docker.sh && ci/build-docker.sh
       - name: push docker
@@ -69,11 +49,7 @@ jobs:
     name: Component Test
     runs-on: ubuntu-latest
     steps:
-      - name: Download code
-        uses: actions/download-artifact@v3
-        with:
-          name: app
-          path: .
+      - uses: ./.github/actions/download-shared-volume
       - name: Execute component test
         run: chmod +x ci/component-test.sh && ci/component-test.sh
   performance-test:
@@ -81,10 +57,6 @@ jobs:
     name: Performance Test
     runs-on: ubuntu-latest
     steps:
-      - name: Download code
-        uses: actions/download-artifact@v3
-        with:
-          name: app
-          path: .
+      - uses: ./.github/actions/download-shared-volume
       - name: Execute performance test
         run: chmod +x ci/performance-test.sh && ci/performance-test.sh
