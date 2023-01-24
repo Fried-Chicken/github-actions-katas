@@ -7,7 +7,7 @@ env:
 jobs:
   clone-the-repo:
     name: Clone the Repo
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     container: gradle:6-jdk11
     steps:
       - name: Clone the Repo
@@ -16,7 +16,7 @@ jobs:
   building-the-application:
     needs: clone-the-repo
     name: Building the Application
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     container: gradle:6-jdk11
     steps:
       - name: Download shared volume
@@ -30,7 +30,7 @@ jobs:
   testing-the-application:
     needs: clone-the-repo
     name: Testing the Application
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     container: gradle:6-jdk11
     steps:
       - name: Download shared volume
@@ -43,7 +43,7 @@ jobs:
   docker-image:
     needs: [building-the-application, testing-the-application]
     name: Create a Docker Image
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     permissions:
       packages: write
     steps:
@@ -59,7 +59,7 @@ jobs:
   component-test:
     needs: docker-image
     name: Component Test
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
       - name: Download shared volume
         uses: actions/download-artifact@v3
@@ -71,7 +71,7 @@ jobs:
   performance-test:
     needs: docker-image
     name: Performance Test
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
       - name: Download shared volume
         uses: actions/download-artifact@v3
