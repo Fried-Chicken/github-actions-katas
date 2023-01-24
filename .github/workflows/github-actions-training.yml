@@ -1,19 +1,46 @@
 name: hello-world
 on: push
 jobs:
-  github-actions-training:
-    name: GitHub Actions Training
+  clone-the-repo:
+    name: Clone the Repo
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
     steps:
       - name: Clone the Repo
         uses: actions/checkout@v3
-      - name: Building App
-        run: chmod +x ci/build-app.sh && ci/build-app.sh
-      - name: Testing App
-        run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
       - name: Uploading Repo
         uses: actions/upload-artifact@v3
         with:
-          name: code
+          name: repo
           path: .
+  building-the-application:
+    needs: clone-the-repo
+    name: Building the Application
+    runs-on: ubuntu-latest
+    container: gradle:6-jdk11
+    steps:
+      - name: Download Repo
+        uses: actions/download-artifact@v3
+        with:
+          name: repo
+          path: .
+      - name: Building App
+        run: chmod +x ci/build-app.sh && ci/build-app.sh
+      - name: Uploading app
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: .
+  testing-the-application:
+    needs: clone-the-repo
+    name: Testing the Application
+    runs-on: ubuntu-latest
+    container: gradle:6-jdk11
+    steps:
+      - name: Download Repo
+        uses: actions/download-artifact@v3
+        with:
+          name: repo
+          path: .
+      - name: Test App
+        run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
