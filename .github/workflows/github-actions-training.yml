@@ -12,7 +12,11 @@ jobs:
     steps:
       - name: Clone the Repo
         uses: actions/checkout@v3
-      - uses: ./.github/actions/upload-shared-volume
+      - name: Uploading Shared Volume
+        uses: actions/upload-artifact@v3
+        with:
+          name: shared-volume
+          path: .
   building-the-application:
     needs: clone-the-repo
     name: Building the Application
@@ -26,7 +30,11 @@ jobs:
           path: .
       - name: Building App
         run: chmod +x ci/build-app.sh && ci/build-app.sh
-      - uses: ./.github/actions/upload-shared-volume
+      - name: Uploading Shared Volume
+        uses: actions/upload-artifact@v3
+        with:
+          name: shared-volume
+          path: .
   testing-the-application:
     needs: clone-the-repo
     name: Testing the Application
