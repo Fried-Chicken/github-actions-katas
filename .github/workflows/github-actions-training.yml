@@ -1,5 +1,9 @@
 name: hello-world
 on: push
+env:
+  docker_username: ${{ secrets.DOCKER_USERNAME }}
+  docker_password: ${{ secrets.DOCKER_PASSWORD }}
+  GIT_COMMIT: ${{ github.sha }}
 jobs:
   clone-the-repo:
     name: Clone the Repo
@@ -44,3 +48,19 @@ jobs:
           path: .
       - name: Test App
         run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
+  docker-image:
+    needs: [building-the-application, testing-the-application]
+    name: Create a Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: app
+          path: .
+      - name: build docker
+        run: chmod +x ci/build-docker.sh && ci/build-docker.sh
+      - name: push docker
+        run: chmod +x ci/push-docker.sh && ci/push-docker.sh
