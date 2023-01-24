@@ -1,8 +1,12 @@
 name: hello-world
 on: push
 jobs:
-  output-hello-world:
+  github-actions-training:
+    name: GitHub Actions Training
     runs-on: ubuntu-latest
+    container: gradle:6-jdk11
     steps:
-      - name: Output "Hello World!"
-        run: echo "Hello World!"
+      - name: Clone the Repo
+        uses: actions/checkout@v3
+      - name: Build App
+        run: chmod +x ci/build-app.sh && ci/build-app.sh
